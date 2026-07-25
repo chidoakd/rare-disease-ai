@@ -13,9 +13,5 @@ def get_variant_data():
 
     return variant
 
-variant = get_variant_data()
 
-print(variant["gene"])
-print(variant["allele_frequency"])
-print(variant["clinical_significance"])
 
