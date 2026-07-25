@@ -18,3 +18,4 @@ variant = get_variant_data()
 print(variant["gene"])
 print(variant["allele_frequency"])
 print(variant["clinical_significance"])
+
