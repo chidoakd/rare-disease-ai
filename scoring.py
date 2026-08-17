@@ -1,3 +1,14 @@
+##################################################
+# scoring.py
+#
+# Calculates the priority score for each genetic variant.
+# The current score is based on:
+# - phenotype overlap
+# - allele rarity
+# - ClinVar significance
+##################################################ß
+
+
 from retriever import get_variant_data
 
 def phenotype_score(patient_phenotypes, gene_phenotypes):
@@ -51,7 +62,7 @@ def rarity_score(allele_frequency):
 
     elif allele_frequency <= 0.01:
         return 6
-
+ 
     else:
         return 0
     
@@ -134,14 +145,5 @@ def total_score(
 #)
 
 
-variant = get_variant_data()
 
-score = total_score(
-    patient,
-    variant["gene_phenotypes"],
-    variant["allele_frequency"],
-    variant["clinical_significance"],
-)
-
-print(score) 
 
