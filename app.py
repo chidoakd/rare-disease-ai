@@ -21,11 +21,22 @@ st.title("🧬 Rare Disease AI")
 st.write("Welcome to our genomic variant prioritization system.")
 
 
-patient = [
-    "seizure",
-    "hypotonia",
-    "developmental delay",
-]
+patient = st.multiselect(
+    "Patient Phenotypes",
+    [
+        "seizure",
+        "hypotonia",
+        "developmental delay",
+        "ataxia",
+        "microcephaly",
+        "epilepsy",
+    ],
+    default=[
+        "seizure",
+        "hypotonia",
+        "developmental delay",
+    ]
+)
 
 
 if st.button("Analyze Variant"):
@@ -49,9 +60,9 @@ if st.button("Analyze Variant"):
             "Classification": variant["clinical_significance"],
         })
     results = sorted(
-    results,
-    key=lambda x: x["Score"],
-    reverse=True
+        results,
+        key=lambda x: x["Score"],
+        reverse=True
 )
     st.subheader("Candidate Variants")
     st.table(results)
