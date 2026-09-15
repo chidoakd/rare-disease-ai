@@ -9,7 +9,7 @@
 import streamlit as st
 
 from retriever import get_variant_data
-from scoring import total_score
+from scoring import total_score, score_breakdown
 
 
 st.set_page_config(
@@ -42,7 +42,6 @@ patient = st.multiselect(
 if st.button("Analyze Variant"):
 
     variants = get_variant_data()
-
     results = []
 
     for variant in variants:
@@ -54,15 +53,27 @@ if st.button("Analyze Variant"):
             variant["clinical_significance"],
         )
 
+        breakdown = score_breakdown(
+            patient,
+            variant["gene_phenotypes"],
+            variant["allele_frequency"],
+            variant["clinical_significance"],
+        )
+
         results.append({
             "Gene": variant["gene"],
             "Score": score,
+            "Phenotype Score": breakdown["phenotype"],
+            "Rarity Score": breakdown["rarity"],
+            "ClinVar Score": breakdown["clinvar"],
             "Classification": variant["clinical_significance"],
         })
+
     results = sorted(
         results,
         key=lambda x: x["Score"],
         reverse=True
-)
+    )
+
     st.subheader("Candidate Variants")
     st.table(results)

@@ -1,17 +1,5 @@
-##################################################
-# scoring.py
-#
-# Calculates the priority score for each genetic variant.
-# The current score is based on:
-# - phenotype overlap
-# - allele rarity
-# - ClinVar significance
-##################################################ß
-
-
-from retriever import get_variant_data
-
 def phenotype_score(patient_phenotypes, gene_phenotypes):
+
     matched_phenotypes = (
         set(patient_phenotypes)
         & set(gene_phenotypes)
@@ -25,28 +13,7 @@ def phenotype_score(patient_phenotypes, gene_phenotypes):
         / len(patient_phenotypes)
     )
 
-    score = match_ratio * 40
-
-    return score
-
-
-patient_phenotypes = [
-    "seizure",
-    "hypotonia",
-    "developmental delay",
-]
-
-gene_phenotypes = [
-    "seizure",
-    "hypotonia",
-]
-
-result = phenotype_score(
-    patient_phenotypes,
-    gene_phenotypes,
-)
-
-print(result)
+    return match_ratio * 40
 
 
 def rarity_score(allele_frequency):
@@ -62,36 +29,9 @@ def rarity_score(allele_frequency):
 
     elif allele_frequency <= 0.01:
         return 6
- 
+
     else:
         return 0
-    
-print(rarity_score(0.000001))
-print(rarity_score(0.0005))
-print(rarity_score(0.02))
-
-def total_score(patient_phenotypes, gene_phenotypes, allele_frequency):
-
-    phenotype = phenotype_score(patient_phenotypes, gene_phenotypes)
-
-    rarity = rarity_score(allele_frequency)
-
-    total = phenotype + rarity
-
-    return total
-
-patient = [
-    "seizure",
-    "hypotonia",
-    "developmental delay"
-]
-
-gene = [
-    "seizure",
-    "hypotonia"
-]
-
-print(total_score(patient, gene, 0.000001))
 
 
 def clinvar_score(clinical_significance):
@@ -110,7 +50,8 @@ def clinvar_score(clinical_significance):
 
     else:
         return 0
-    
+
+
 def total_score(
     patient_phenotypes,
     gene_phenotypes,
@@ -131,19 +72,34 @@ def total_score(
         clinical_significance
     )
 
-    total = phenotype + rarity + clinvar
-
-    return total
-
-#print(
-#    total_score(
-#       patient,
-#       gene,
-#       0.000001,
-#       "Pathogenic",
-#    )
-#)
+    return phenotype + rarity + clinvar
 
 
+def score_breakdown(
+    patient_phenotypes,
+    gene_phenotypes,
+    allele_frequency,
+    clinical_significance,
+):
+
+    phenotype = phenotype_score(
+        patient_phenotypes,
+        gene_phenotypes
+    )
+
+    rarity = rarity_score(
+        allele_frequency
+    )
+
+    clinvar = clinvar_score(
+        clinical_significance
+    )
+
+    return {
+        "phenotype": phenotype,
+        "rarity": rarity,
+        "clinvar": clinvar,
+        "total": phenotype + rarity + clinvar,
+    }
 
 
